@@ -1,12 +1,12 @@
-env:
-  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
-
 name: Weather Logger
 
 on:
   schedule:
     - cron: '15 13 * * *'
   workflow_dispatch:
+
+permissions:
+  contents: write   # ⭐これが必須
 
 jobs:
   build:
@@ -27,7 +27,6 @@ jobs:
       - name: Run script
         run: python main.py
 
-      # ⭐ここが追加ポイント
       - name: Commit and push
         run: |
           git config user.name "github-actions"
