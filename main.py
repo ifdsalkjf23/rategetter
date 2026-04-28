@@ -1,24 +1,30 @@
 import requests
 import json
 
-url = "https://query1.finance.yahoo.com/v7/finance/quote?symbols=USDJPY=X"
+# 名古屋の座標
+url = "https://api.open-meteo.com/v1/forecast?latitude=35.1815&longitude=136.9066&current_weather=true"
 
-res = requests.get(url, timeout=10)
-res.raise_for_status()
+try:
+    print("リクエスト送信中...")
+    
+    res = requests.get(url, timeout=10)
+    res.raise_for_status()
 
-data = res.json()
+    print("レスポンス受信OK")
 
-results = data.get("quoteResponse", {}).get("result", [])
-
-if not results:
-    print("データ取得失敗：resultが空")
-else:
-    quote = results[0]
+    data = res.json()
+    current = data.get("current_weather", {})
 
     result = {
-        "Bid": quote.get("bid"),
-        "Ask": quote.get("ask"),
-        "Change": quote.get("regularMarketChange")
+        "気温": current.get("temperature"),
+        "風速": current.get("windspeed"),
+        "風向": current.get("winddirection"),
+        "天気コード": current.get("weathercode"),
+        "取得時刻": current.get("time")
     }
 
-    print(json.dumps(result, indent=2))
+    print("取得結果👇")
+    print(json.dumps(result, indent=2, ensure_ascii=False))
+
+except Exception as e:
+    print("エラー発生:", e)
