@@ -1,6 +1,7 @@
 env:
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
-  name: Scheduled Comment
+
+name: Scheduled Comment
 
 on:
   schedule:
@@ -25,3 +26,10 @@ jobs:
 
       - name: Run script
         run: python main.py
+
+      # 👇 これを追加（重要）
+      - name: アーティファクトをアップロード
+        uses: actions/upload-artifact@v4
+        with:
+          name: weather-history
+          path: weather_history.txt
