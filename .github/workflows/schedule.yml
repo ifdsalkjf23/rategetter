@@ -1,11 +1,11 @@
 env:
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
 
-name: Scheduled Comment
+name: Weather Logger
 
 on:
   schedule:
-    - cron: '15 13 * * *'  # 日本時間22:15
+    - cron: '15 13 * * *'
   workflow_dispatch:
 
 jobs:
@@ -22,14 +22,16 @@ jobs:
           python-version: '3.12'
 
       - name: Install dependencies
-        run: pip install requests beautifulsoup4
+        run: pip install requests
 
       - name: Run script
         run: python main.py
 
-      # 👇 これを追加（重要）
-      - name: アーティファクトをアップロード
-        uses: actions/upload-artifact@v4
-        with:
-          name: weather-history
-          path: weather_history.txt
+      # ⭐ここが追加ポイント
+      - name: Commit and push
+        run: |
+          git config user.name "github-actions"
+          git config user.email "github-actions@github.com"
+          git add weather_history.txt
+          git commit -m "update weather log" || exit 0
+          git push
